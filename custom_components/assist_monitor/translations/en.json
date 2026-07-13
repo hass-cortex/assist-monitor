@@ -1,0 +1,13 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Assist Monitor",
+        "description": "Expose the latest Assist conversation across every assist (question, answer, mode, per-stage timings, acted entities) as sensors."
+      }
+    },
+    "abort": {
+      "already_configured": "Assist Monitor is already set up."
+    }
+  }
+}

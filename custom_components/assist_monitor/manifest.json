@@ -1,0 +1,15 @@
+{
+  "domain": "assist_monitor",
+  "name": "Assist Monitor",
+  "after_dependencies": ["assist_satellite"],
+  "codeowners": ["@parkghost"],
+  "config_flow": true,
+  "dependencies": ["assist_pipeline"],
+  "documentation": "https://github.com/hass-cortex/assist-monitor",
+  "integration_type": "service",
+  "iot_class": "local_push",
+  "issue_tracker": "https://github.com/hass-cortex/assist-monitor/issues",
+  "requirements": [],
+  "single_config_entry": true,
+  "version": "0.1.0"
+}

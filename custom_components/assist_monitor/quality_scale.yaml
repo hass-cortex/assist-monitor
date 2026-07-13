@@ -1,0 +1,138 @@
+rules:
+  # Bronze
+  action-setup:
+    status: exempt
+    comment: |
+      No custom services/actions registered.
+  appropriate-polling:
+    status: done
+    comment: |
+      5s safety-net poll over an in-process store; assist_satellite state
+      changes trigger a debounced (0.3s) immediate refresh, so voice rounds
+      update in near real time without a tight poll.
+  brands:
+    status: exempt
+    comment: |
+      Shipped as a HACS custom integration; not submitted to
+      home-assistant/brands since this is not a core integration.
+  common-modules: done
+  config-flow: done
+  config-flow-test-coverage: done
+  dependency-transparency: done
+  docs-actions:
+    status: exempt
+    comment: |
+      No custom services/actions.
+  docs-high-level-description: done
+  docs-installation-instructions: done
+  docs-removal-instructions: done
+  entity-event-setup:
+    status: exempt
+    comment: |
+      Entities subscribe only through CoordinatorEntity; the coordinator
+      owns the single bus listener and detaches it on unload.
+  entity-unique-id: done
+  has-entity-name: done
+  runtime-data: done
+  test-before-configure:
+    status: exempt
+    comment: |
+      No external connection to test; the integration reads an in-memory
+      store that may legitimately be empty at setup time.
+  test-before-setup: done
+  unique-config-entry: done
+
+  # Silver
+  action-exceptions:
+    status: exempt
+    comment: |
+      No custom services/actions.
+  config-entry-unloading: done
+  docs-configuration-parameters:
+    status: exempt
+    comment: |
+      Zero-configuration integration; the config flow has no fields.
+  docs-installation-parameters:
+    status: exempt
+    comment: |
+      Zero-configuration integration.
+  entity-unavailable:
+    status: exempt
+    comment: |
+      Sensors report None (unknown) when no conversation has happened yet;
+      the data source is in-process memory and cannot become unreachable.
+  integration-owner: done
+  log-when-unavailable:
+    status: exempt
+    comment: |
+      In-process data source; there is no remote endpoint to lose.
+  parallel-updates: done
+  reauthentication-flow:
+    status: exempt
+    comment: |
+      No authentication involved.
+  test-coverage: done
+
+  # Gold
+  devices: done
+  diagnostics: todo
+  discovery:
+    status: exempt
+    comment: |
+      Reads local in-process data; nothing to discover.
+  discovery-update-info:
+    status: exempt
+    comment: |
+      No network discovery.
+  docs-data-update: done
+  docs-examples: todo
+  docs-known-limitations: done
+  docs-supported-devices:
+    status: exempt
+    comment: |
+      Service integration, not a device integration.
+  docs-supported-functions: done
+  docs-troubleshooting: todo
+  docs-use-cases: done
+  dynamic-devices: done
+  entity-category: done
+  entity-device-class: done
+  entity-disabled-by-default:
+    status: todo
+    comment: |
+      Diagnostic sensors could default to disabled to reduce noise.
+  entity-translations:
+    status: todo
+    comment: |
+      Entities use static English names via description.name.
+  exception-translations:
+    status: exempt
+    comment: |
+      No user-facing exceptions raised.
+  icon-translations:
+    status: todo
+    comment: |
+      Icons are set inline on entity descriptions, not via icons.json.
+  reconfiguration-flow:
+    status: exempt
+    comment: |
+      Zero-configuration integration; nothing to reconfigure.
+  repair-issues:
+    status: exempt
+    comment: |
+      No known user-repairable issues requiring repair flows.
+  stale-devices: done
+
+  # Platinum
+  async-dependency: done
+  inject-websession:
+    status: exempt
+    comment: |
+      No HTTP client used.
+  strict-typing:
+    status: exempt
+    comment: |
+      pyright standard mode enabled with reportMissingImports=none for
+      untyped HA stubs. Full strict-typing requires homeassistant type
+      stubs which are not available for custom integrations running
+      outside HA.
