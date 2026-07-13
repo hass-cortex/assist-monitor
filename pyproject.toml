@@ -1,6 +1,6 @@
 [project]
 name = "assist-monitor"
-version = "0.1.0"
+version = "0.2.0"
 description = "Home Assistant integration exposing the latest Assist conversation (question, answer, mode, timings) as sensors, updated incrementally in real time"
 readme = "README.md"
 requires-python = ">=3.14"
@@ -75,7 +75,7 @@ exclude_lines = [
 
 [tool.commitizen]
 name = "cz_conventional_commits"
-version = "0.1.0"
+version = "0.2.0"
 version_files = [
     "pyproject.toml:version",
     "custom_components/assist_monitor/manifest.json:version",
