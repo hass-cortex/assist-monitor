@@ -32,7 +32,7 @@ custom_components/assist_monitor/
 ├── pipeline_reader.py   # PURE event flattening (no HA imports; unit-testable standalone) +
 │                        #   round_key phase logic (q/a/e/x) + debug-store scanning
 ├── sensor.py            # One "Latest" device + one device per Assist pipeline (dynamic add/remove);
-│                        #   ~26 sensors per device; ROUND_KEY_SENSOR appended last (ordering sentinel)
+│                        #   15 sensors per device (SENSORS) + ROUND_KEY_SENSOR appended last (ordering sentinel)
 ├── config_flow.py       # Single-instance, zero-config flow
 ├── const.py             # DOMAIN, POLL_SECONDS, SCOPE_LATEST
 ├── strings.json         # UI strings (source of truth)
