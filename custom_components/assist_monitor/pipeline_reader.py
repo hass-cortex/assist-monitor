@@ -57,19 +57,24 @@ def _seconds(a: str | None, b: str | None) -> float | None:
     return round((db - da).total_seconds(), 3)
 
 
-def _is_tool_error(tool_result: Any) -> bool:
-    """Best-effort error detection on a tool result delta.
+def _is_tool_error(result: Any) -> bool:
+    """Whether a tool result delta's `result` ({data, error}) is a failure.
 
-    External (agent-executed) tools rarely set an explicit error flag in the
-    chat-log delta, so — mirroring the pi-assistant addon's heuristic — fall back
-    to the common error markers in the serialized payload. Serialized without
-    spaces so the no-space markers match, and the escaped variant catches a result
-    that is itself a JSON string.
+    The producer's `error` flag is authoritative when set. External (agent-executed)
+    tools often leave it unset even on failure, so — mirroring the pi-assistant
+    addon's heuristic — fall back to the common error markers in the serialized
+    data. Serialized without spaces so the no-space markers match, and the escaped
+    variant catches data that is itself a JSON string.
     """
-    if tool_result is None:
+    if not isinstance(result, dict):
+        return False
+    if result.get("error") is True:
+        return True
+    data = result.get("data")
+    if data is None:
         return False
     serialized = json.dumps(
-        tool_result, ensure_ascii=False, separators=(",", ":"), default=str
+        data, ensure_ascii=False, separators=(",", ":"), default=str
     )
     return (
         "MCP error" in serialized
@@ -138,10 +143,10 @@ def flatten_run(events: list[Any]) -> dict[str, Any]:
                 if isinstance(call, dict) and call.get("tool_name"):
                     tool_names.append(call["tool_name"])
             # A tool's outcome arrives later as a separate `role: tool_result` delta
-            # (chat_log fires the listener with asdict(ToolResultContent)); inspect it
+            # (chat_log fires the listener with ToolResultContent.as_dict()); inspect it
             # so the pipeline view sees tool failures, not just the call count.
             if delta.get("role") == "tool_result" and _is_tool_error(
-                delta.get("tool_result")
+                delta.get("result")
             ):
                 tool_error_count += 1
                 if delta.get("tool_name"):

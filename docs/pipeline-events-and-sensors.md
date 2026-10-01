@@ -57,7 +57,7 @@ wall-clock ISO timestamp per event type; all durations are computed from those a
 | `stt-vad-start` / `stt-vad-end` | — (payload is a stream-relative ms `timestamp`; the reader uses the event's own wall-clock timestamp instead) | anchors for `speech_seconds` / `stt_seconds` / `latency_seconds` |
 | `stt-end` | `stt_output.text` | `question` — **the run becomes publishable here** (`READY_MARKERS = {"stt-end", "error"}`) |
 | `intent-start` | `engine`, `device_id` (also: `language`, `intent_input`, `conversation_id`, `satellite_id`, `prefer_local_intents`) | `engine`, `device_id` |
-| `intent-progress` | `chat_log_delta`; the delta-less variant `tts_start_streaming: true` anchors `latency_seconds` | first delta with `content` / `thinking_content` / `tool_calls` sets the TTFT anchor; each `tool_calls` entry bumps `tool_calls` + `tool_names`; a `role: tool_result` delta that looks failed bumps `tool_error_count` + `failed_tools` |
+| `intent-progress` | `chat_log_delta`; the delta-less variant `tts_start_streaming: true` anchors `latency_seconds` | first delta with `content` / `thinking_content` / `tool_calls` sets the TTFT anchor; each `tool_calls` entry bumps `tool_calls` + `tool_names`; a `role: tool_result` delta whose `result.error` is set, or whose `result.data` looks failed, bumps `tool_error_count` + `failed_tools` |
 | `intent-end` | `processed_locally`, `intent_output` (a [conversation response](https://developers.home-assistant.io/docs/intent_conversation_api#conversation-response)) | `status = success`, `processed_locally` → `mode` (`llm`/`local`) + `used_llm`, `continue_conversation`, `answer` (response speech), `response_type`; a successful local intent also counts as one tool call named `intent` |
 | `tts-start` | `tts_input`, `engine`, `voice` (also: `language`, `acknowledge_override`) | `answer` fallback (if intent-end had no speech), `tts_engine`, `tts_voice` |
 | `error` | `message`, `code` ([official error codes](https://developers.home-assistant.io/docs/voice/pipelines/#error-codes), e.g. `wake-word-timeout`, `stt-no-text-recognized`, `intent-failed`, `tts-failed`) | `status = error`, `error_message`, `error_code` |
@@ -147,7 +147,7 @@ Notes on the last two columns:
 | Error before STT text (`stt-no-text-recognized`, `wake-word-timeout`, …) | published and counted (`READY_MARKERS` includes `error`) with an empty `last_question`; `round_key` = `e:<n>` so consumers see the round end |
 | Cancelled run (`run-end` without `intent-end`/`error`) | `status` stays `in_progress` (faithful mirror); `finished` = `true`; `round_key` = `e:<n>` so consumers stop waiting |
 | Silent success (finished, no speech) | `round_key` = `e:<n>` — terminal, no answer can arrive anymore |
-| Failed tool calls | best-effort detection on the `tool_result` delta (`MCP error`, `isError`, `success:false` markers) → `tool_errors` + `failed_tools` |
+| Failed tool calls | the `tool_result` delta's `result.error` flag, else best-effort markers in `result.data` (`MCP error`, `isError`, `success:false`) → `tool_errors` + `failed_tools` |
 
 ## References
 

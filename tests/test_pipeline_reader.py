@@ -11,6 +11,8 @@ import pathlib
 import types
 from datetime import datetime
 
+import pytest
+
 _MODULE_PATH = (
     pathlib.Path(__file__).resolve().parents[1]
     / "custom_components"
@@ -245,7 +247,10 @@ def test_tool_error_detected_from_tool_result_delta() -> None:
                     "role": "tool_result",
                     "tool_call_id": "c1",
                     "tool_name": "ha_get_state",
-                    "tool_result": {"success": False, "error": "entity not found"},
+                    "result": {
+                        "data": {"success": False, "error": "entity not found"},
+                        "error": False,
+                    },
                 }
             },
             "2026-06-29T12:00:02.000000+00:00",
@@ -260,6 +265,28 @@ def test_tool_error_detected_from_tool_result_delta() -> None:
     assert r["tool_calls"] == 1
     assert r["tool_error_count"] == 1
     assert r["failed_tools"] == ["ha_get_state"]
+
+
+@pytest.mark.parametrize(
+    ("result", "expected"),
+    [
+        # The producer's flag is authoritative, even on a benign-looking payload.
+        ({"data": {"error": "HomeAssistantError"}, "error": True}, True),
+        # Unflagged (external agent): fall back to the payload markers.
+        ({"data": {"result": "MCP error -32602: bad args"}, "error": False}, True),
+        ({"data": {"success": True}, "error": False}, False),
+        (None, False),
+    ],
+)
+def test_tool_error_flag_then_payload_fallback(result, expected: bool) -> None:
+    """`result.error` wins; only an unflagged result is scanned for error markers."""
+    delta = {"role": "tool_result", "tool_name": "ha_get_state", "result": result}
+    events = [
+        _ev("intent-progress", {"chat_log_delta": delta}, "2026-06-29T12:00:02+00:00"),
+    ]
+    r = pr.flatten_run(events)
+    assert r["tool_error_count"] == int(expected)
+    assert r["failed_tools"] == (["ha_get_state"] if expected else [])
 
 
 def test_local_intent_ttft_falls_back_to_intent_end() -> None:
