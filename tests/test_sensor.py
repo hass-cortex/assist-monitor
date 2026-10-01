@@ -7,7 +7,7 @@ from types import SimpleNamespace
 from homeassistant.components import assist_pipeline
 from homeassistant.helpers import device_registry as dr
 
-from custom_components.assist_monitor.const import SCOPE_LATEST
+from custom_components.assist_monitor.const import DOMAIN, SCOPE_LATEST
 from custom_components.assist_monitor.coordinator import AssistMonitorCoordinator
 from custom_components.assist_monitor.sensor import (
     ROUND_KEY_SENSOR,
@@ -187,19 +187,20 @@ async def test_device_manager_creates_and_removes_scopes(
     per_scope = [e for e in added if e._scope == "pipe1"]
     assert per_scope[-1].entity_description.key == "round_key"
 
-    # Pipeline deleted -> its device is released from the entry on the next coordinator
-    # tick (the registry cascade removes its entities), even though its count-only view
-    # lingers (persisted counts never resurrect a device).
+    # Pipeline deleted -> its device is removed on the next coordinator tick (the
+    # registry cascade removes its entities), even though its count-only view lingers
+    # (persisted counts never resurrect a device).
     assist_pipeline.async_get_pipelines.return_value = []
     install_debug_store(mock_hass, {})
     registry = dr.async_get(mock_hass)
     device = SimpleNamespace(id="device_pipe1")
-    registry.async_get_device.return_value = device
+    registry.async_get_device_by_identifier.return_value = device
     await coordinator.async_refresh()
     assert coordinator.data["pipe1"]["conversation_count"] == 1  # count-only view stays
-    registry.async_update_device.assert_called_once_with(
-        "device_pipe1", remove_config_entry_id=mock_config_entry.entry_id
+    registry.async_get_device_by_identifier.assert_called_with(
+        (DOMAIN, f"{mock_config_entry.entry_id}_pipe1"), mock_config_entry.entry_id
     )
+    registry.async_remove_device.assert_called_once_with("device_pipe1")
 
 
 async def test_device_manager_adds_new_pipeline_on_tick(

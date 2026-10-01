@@ -326,16 +326,14 @@ class _DeviceManager:
 
     @callback
     def _remove_device(self, scope: str) -> None:
-        # Releasing the entry's (only) link removes the device; the registry cascade then
-        # removes its entities, including the live entity objects.
+        # The registry cascade removes the device's entities, including the live
+        # entity objects.
         device_registry = dr.async_get(self.hass)
-        device = device_registry.async_get_device(
-            identifiers={(DOMAIN, f"{self.entry.entry_id}_{scope}")}
+        device = device_registry.async_get_device_by_identifier(
+            (DOMAIN, f"{self.entry.entry_id}_{scope}"), self.entry.entry_id
         )
         if device is not None:
-            device_registry.async_update_device(
-                device.id, remove_config_entry_id=self.entry.entry_id
-            )
+            device_registry.async_remove_device(device.id)
 
     @callback
     def _cleanup_stale_devices(self) -> None:
@@ -346,9 +344,7 @@ class _DeviceManager:
             device_registry, self.entry.entry_id
         ):
             if not device.identifiers & valid:
-                device_registry.async_update_device(
-                    device.id, remove_config_entry_id=self.entry.entry_id
-                )
+                device_registry.async_remove_device(device.id)
 
 
 class AssistMonitorSensor(CoordinatorEntity[AssistMonitorCoordinator], SensorEntity):

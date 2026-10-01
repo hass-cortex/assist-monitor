@@ -375,7 +375,7 @@ def _reset_ha_mocks():
         registry = MagicMock()
         registry.async_get.return_value = None
         registry.async_get_area.return_value = None
-        registry.async_get_device.return_value = None
+        registry.async_get_device_by_identifier.return_value = None
         mod.async_get = MagicMock(return_value=registry)
     # Module-level registry helper looked up at call time (dr.async_entries_for_config_entry).
     _ha_helpers_dr.async_entries_for_config_entry = MagicMock(return_value=[])
