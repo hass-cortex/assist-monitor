@@ -27,7 +27,7 @@ include = ["custom_components*"]
 
 [dependency-groups]
 dev = ["ruff>=0.14", "pyright>=1.1.390", "commitizen>=4.0", "pre-commit>=4.0"]
-test = ["pytest>=8.0", "pytest-asyncio>=0.24", "pytest-cov>=6.0", "voluptuous>=0.15"]
+test = ["pytest>=8.0", "pytest-asyncio>=0.24", "pytest-cov>=6.0", "probatio==0.12.4"]
 
 [tool.pytest.ini_options]
 asyncio_mode = "auto"

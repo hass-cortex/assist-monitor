@@ -24,10 +24,10 @@ dev = [
     { name = "ruff" },
 ]
 test = [
+    { name = "probatio" },
     { name = "pytest" },
     { name = "pytest-asyncio" },
     { name = "pytest-cov" },
-    { name = "voluptuous" },
 ]
 
 [package.metadata]
@@ -40,10 +40,10 @@ dev = [
     { name = "ruff", specifier = ">=0.14" },
 ]
 test = [
+    { name = "probatio", specifier = "==0.12.4" },
     { name = "pytest", specifier = ">=8.0" },
     { name = "pytest-asyncio", specifier = ">=0.24" },
     { name = "pytest-cov", specifier = ">=6.0" },
-    { name = "voluptuous", specifier = ">=0.15" },
 ]
 
 [[package]]
@@ -313,6 +313,15 @@ wheels = [
 ]
 
 [[package]]
+name = "probatio"
+version = "0.12.4"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/c5/88/9613b95b6a7d31e85d0204adbad7f85f6b93fea938a0bfdc721ca9dba029/probatio-0.12.4.tar.gz", hash = "sha256:af97a1e426c2948858bb69005c8fd5a1e8ae37785858f4cfba2beb4d8d15bbaf", size = 401484, upload-time = "2026-09-29T14:05:55.467Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/87/cf/bcaa628c624da1853245c6ab729c865ce3d1ad81c501ade6cb1783349c70/probatio-0.12.4-py3-none-any.whl", hash = "sha256:f5624236b4c6b01b6997817f281a1ce14b288dd1ec1cd8c3a6869d4a4514479d", size = 236564, upload-time = "2026-09-29T14:05:52.323Z" },
+]
+
+[[package]]
 name = "prompt-toolkit"
 version = "3.0.51"
 source = { registry = "https://pypi.org/simple" }
@@ -504,15 +513,6 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/34/d9/b477fddb68840b570af8b22afe9b035cbc277b5fb7b33dea390617a8b10f/virtualenv-21.6.1.tar.gz", hash = "sha256:15f978b7cd329f24855ff4a0c4b4899cc7678589f49adbdcbbb4d3232e641128", size = 5526620, upload-time = "2026-07-10T19:33:53.312Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/c1/7c/4e7225d46d634a0d8d534dd8a6ce0c319d09b4d0cf0337eb314ca4789d8c/virtualenv-21.6.1-py3-none-any.whl", hash = "sha256:afe991df855715a2b2f60edfcc0107ef95a79fdfd8cb4cdaa71603d1c12e463b", size = 5506392, upload-time = "2026-07-10T19:33:51.629Z" },
-]
-
-[[package]]
-name = "voluptuous"
-version = "0.16.0"
-source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/92/f4/0738e6849858deae22218be3bbb8207ba83a96e9d0ec7e8e8cd67b30e5ca/voluptuous-0.16.0.tar.gz", hash = "sha256:006535e22fed944aec17bef6e8725472476194743c87bd233e912eb463f8ff05", size = 54238, upload-time = "2025-12-18T23:18:46.08Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/d1/00/0e0da784245c93cf346150ab67634177bf277f93b7a162bb56c928c39c04/voluptuous-0.16.0-py3-none-any.whl", hash = "sha256:ee342095263e1b5afbd4d418cb5adc92810eebfd07696bb033a261210df33db4", size = 31931, upload-time = "2025-12-18T23:18:44.694Z" },
 ]
 
 [[package]]
