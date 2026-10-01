@@ -162,7 +162,8 @@ class AssistMonitorCoordinator(DataUpdateCoordinator[dict[str, dict[str, Any]]])
             view["device_name"], view["area"] = None, None
             return
         area_name = None
-        if device.area_id and (area := area_registry.async_get_area(device.area_id)):
+        area_id = dr.async_get_effective_area_id(self.hass, device)
+        if area_id and (area := area_registry.async_get_area(area_id)):
             area_name = area.name
         view["device_name"], view["area"] = (
             device.name_by_user or device.name,
