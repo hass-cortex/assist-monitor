@@ -153,11 +153,3 @@ tag (e.g., `0.1.0`).
 |----------|-------------|
 | [Devices & Sensors](docs/sensors.md) | Every device and sensor, plus race-free `round_key` consumption |
 | [Pipeline events & sensor updates](docs/pipeline-events-and-sensors.md) | Event timeline, timing-metric anchors, per-stage updates — verified against HA core |
-
-## Contributing
-
-See [CONTRIBUTING.md](CONTRIBUTING.md) for development setup, testing, and contribution guidelines.
-
-## License
-
-[MIT](LICENSE)
