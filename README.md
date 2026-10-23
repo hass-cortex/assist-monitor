@@ -1,7 +1,7 @@
 # Assist Monitor for Home Assistant
 
 [![GitHub Release](https://img.shields.io/github/v/release/hass-cortex/assist-monitor)](https://github.com/hass-cortex/assist-monitor/releases)
-[![HACS](https://img.shields.io/badge/HACS-Custom-blue.svg)](https://hacs.xyz/)
+[![HACS](https://img.shields.io/badge/HACS-Default-41BDF5.svg)](https://hacs.xyz/)
 [![HA Version](https://img.shields.io/badge/HA-2026.10.0+-green.svg)](https://www.home-assistant.io/)
 [![GitHub License](https://img.shields.io/github/license/hass-cortex/assist-monitor)](https://github.com/hass-cortex/assist-monitor/blob/main/LICENSE)
 [![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/hass-cortex/assist-monitor)
@@ -53,8 +53,7 @@ HA side**, so it works for any assist and needs no device cooperation.
 
 [![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=hass-cortex&repository=assist-monitor&category=integration)
 
-Click the button above, or manually: HACS > three-dot menu > **Custom repositories** > add
-`https://github.com/hass-cortex/assist-monitor` (Integration) > install > restart HA.
+Click the button above, or manually: **HACS** > search "Assist Monitor" > **Download** > restart HA.
 
 <details>
 <summary>Manual installation</summary>
