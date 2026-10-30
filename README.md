@@ -53,7 +53,7 @@ HA side**, so it works for any assist and needs no device cooperation.
 
 [![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=hass-cortex&repository=assist-monitor&category=integration)
 
-Click the button above, or manually: **HACS** > search "Assist Monitor" > **Download** > restart HA.
+Click the button above, or manually: **Settings > Marketplace** > search "Assist Monitor" > **Install** > restart HA.
 
 <details>
 <summary>Manual installation</summary>
@@ -84,7 +84,7 @@ display ([why and how](docs/sensors.md#consuming-a-round-race-free-round_key)).
 ### Uninstallation
 
 **Settings > Devices & Services** > Assist Monitor > three-dot menu > **Delete** > remove
-`custom_components/assist_monitor/` (or uninstall via HACS) > restart HA. The persisted
+`custom_components/assist_monitor/` (or uninstall via the Marketplace) > restart HA. The persisted
 conversation counters live in `.storage/assist_monitor_counts` and can be deleted afterwards.
 
 ## Debugging
@@ -133,7 +133,7 @@ HA side, so it includes STT finalisation, HA↔agent transport, and TTS setup. S
 
 **How do I install the latest development version?**
 
-After the integration is installed via HACS, switch to the latest `main` branch using the
+After the integration is installed via the Marketplace, switch to the latest `main` branch using the
 `update.install` action:
 
 1. Go to **Developer Tools > Actions**

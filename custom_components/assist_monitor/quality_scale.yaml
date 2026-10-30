@@ -13,7 +13,7 @@ rules:
   brands:
     status: exempt
     comment: |
-      Shipped as a HACS custom integration; not submitted to
+      Shipped as a Marketplace custom integration; not submitted to
       home-assistant/brands since this is not a core integration.
   common-modules: done
   config-flow: done
