@@ -2,6 +2,7 @@
   "domain": "assist_monitor",
   "name": "Assist Monitor",
   "after_dependencies": ["assist_satellite"],
+  "categories": ["ai_voice.voice_assistants"],
   "codeowners": ["@parkghost"],
   "config_flow": true,
   "dependencies": ["assist_pipeline"],
