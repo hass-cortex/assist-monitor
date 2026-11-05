@@ -20,7 +20,7 @@ PLATFORMS = ["sensor"]
 
 async def async_setup_entry(
     hass: HomeAssistant, entry: AssistMonitorConfigEntry
-) -> bool:
+) -> None:
     """Set up Assist Monitor from a config entry."""
     coordinator = AssistMonitorCoordinator(hass, entry)
     integration = await async_get_integration(hass, DOMAIN)
@@ -33,11 +33,10 @@ async def async_setup_entry(
     coordinator.attach_listeners()
     entry.runtime_data = coordinator
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
-    return True
 
 
 async def async_unload_entry(
     hass: HomeAssistant, entry: AssistMonitorConfigEntry
-) -> bool:
+) -> None:
     """Unload a config entry (listeners are released via entry.async_on_unload)."""
-    return await hass.config_entries.async_unload_platforms(entry, PLATFORMS)
+    await hass.config_entries.async_unload_platforms_or_raise(entry, PLATFORMS)

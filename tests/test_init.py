@@ -15,14 +15,19 @@ from custom_components.assist_monitor import (
 )
 from custom_components.assist_monitor.const import SCOPE_LATEST
 from custom_components.assist_monitor.coordinator import AssistMonitorCoordinator
-from tests.conftest import install_debug_store, make_event, make_run_events
+from tests.conftest import (
+    ConfigEntryError,
+    install_debug_store,
+    make_event,
+    make_run_events,
+)
 
 
 async def test_setup_and_unload_entry(mock_hass, mock_config_entry) -> None:
     """Setup wires the coordinator into runtime_data; the entry owns listener cleanup."""
     install_debug_store(mock_hass, {})
 
-    assert await async_setup_entry(mock_hass, mock_config_entry) is True
+    await async_setup_entry(mock_hass, mock_config_entry)
     coordinator = mock_config_entry.runtime_data
     assert isinstance(coordinator, AssistMonitorCoordinator)
     # Empty store -> a single empty global view (idle, nothing counted yet).
@@ -40,11 +45,23 @@ async def test_setup_and_unload_entry(mock_hass, mock_config_entry) -> None:
     tracker = event_helper.async_track_state_change_filtered.return_value
     assert tracker.async_remove in mock_config_entry._on_unload
 
-    assert await async_unload_entry(mock_hass, mock_config_entry) is True
+    await async_unload_entry(mock_hass, mock_config_entry)
     # HA runs entry.async_on_unload callbacks after a successful unload.
     for unsub in mock_config_entry._on_unload:
         unsub()
     tracker.async_remove.assert_called_once()
+
+
+async def test_unload_raises_when_a_platform_fails(
+    mock_hass, mock_config_entry
+) -> None:
+    """A failed platform unload surfaces as an error, not a silent False."""
+    install_debug_store(mock_hass, {})
+    await async_setup_entry(mock_hass, mock_config_entry)
+    mock_hass.config_entries.async_unload_platforms.return_value = False
+
+    with pytest.raises(ConfigEntryError):
+        await async_unload_entry(mock_hass, mock_config_entry)
 
 
 async def test_view_merges_run_count_and_round_key(

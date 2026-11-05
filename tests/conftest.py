@@ -70,6 +70,16 @@ class _AbortFlow(Exception):  # noqa: N818 - mirrors HA's AbortFlow name
 
 _ha_data_entry_flow.AbortFlow = _AbortFlow
 
+# ── exceptions ──
+_ha_exceptions = ModuleType("homeassistant.exceptions")
+
+
+class ConfigEntryError(Exception):
+    """Mirrors homeassistant.exceptions.ConfigEntryError."""
+
+
+_ha_exceptions.ConfigEntryError = ConfigEntryError
+
 # ── Config entries ──
 
 
@@ -345,6 +355,7 @@ for mod_name, mod in [
     ("homeassistant.config_entries", _ha_config_entries),
     ("homeassistant.const", _ha_const),
     ("homeassistant.data_entry_flow", _ha_data_entry_flow),
+    ("homeassistant.exceptions", _ha_exceptions),
     ("homeassistant.components", _ha_components),
     ("homeassistant.components.assist_pipeline", _ha_components_ap),
     ("homeassistant.components.sensor", _ha_components_sensor),
@@ -407,6 +418,15 @@ def mock_hass():
     hass.config_entries = MagicMock()
     hass.config_entries.async_forward_entry_setups = AsyncMock()
     hass.config_entries.async_unload_platforms = AsyncMock(return_value=True)
+
+    async def _unload_platforms_or_raise(entry, platforms) -> None:
+        # Mirrors core: raise instead of returning False when a platform fails.
+        if not await hass.config_entries.async_unload_platforms(entry, platforms):
+            raise ConfigEntryError("unload_platforms_failed")
+
+    hass.config_entries.async_unload_platforms_or_raise = AsyncMock(
+        side_effect=_unload_platforms_or_raise
+    )
     return hass
 
 
