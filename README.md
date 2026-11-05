@@ -1,7 +1,6 @@
 # Assist Monitor for Home Assistant
 
 [![GitHub Release](https://img.shields.io/github/v/release/hass-cortex/assist-monitor)](https://github.com/hass-cortex/assist-monitor/releases)
-[![HACS](https://img.shields.io/badge/HACS-Default-41BDF5.svg)](https://hacs.xyz/)
 [![HA Version](https://img.shields.io/badge/HA-2026.11.0+-green.svg)](https://www.home-assistant.io/)
 [![GitHub License](https://img.shields.io/github/license/hass-cortex/assist-monitor)](https://github.com/hass-cortex/assist-monitor/blob/main/LICENSE)
 [![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/hass-cortex/assist-monitor)
