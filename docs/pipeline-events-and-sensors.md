@@ -55,7 +55,7 @@ wall-clock ISO timestamp per event type; all durations are computed from those a
 | `wake_word-end` | `wake_word_output.wake_word_phrase` / `.wake_word_id` (= `DetectionResult` minus `queued_audio`; also `timestamp`) | `wake_word` |
 | `stt-start` | `engine` (also: `metadata`, `audio_processing`) | `stt_engine` |
 | `stt-vad-start` / `stt-vad-end` | — (payload is a stream-relative ms `timestamp`; the reader uses the event's own wall-clock timestamp instead) | anchors for `speech_seconds` / `stt_seconds` / `latency_seconds` |
-| `stt-end` | `stt_output.text` | `question` — **the run becomes publishable here** (`READY_MARKERS = {"stt-end", "error"}`) |
+| `stt-end` | `stt_output.text` | `question` — **the run becomes publishable here** (`READY_MARKERS = {"stt-end", "intent-start", "error"}`; text runs have no `stt-end`, so `intent-start` publishes them with `intent_input` as the question) |
 | `intent-start` | `engine`, `device_id` (also: `language`, `intent_input`, `conversation_id`, `satellite_id`, `prefer_local_intents`) | `engine`, `device_id` |
 | `intent-progress` | `chat_log_delta`; the delta-less variant `tts_start_streaming: true` anchors `latency_seconds` | first delta with `content` / `thinking_content` / `tool_calls` sets the TTFT anchor; each `tool_calls` entry bumps `tool_calls` + `tool_names`; a `role: tool_result` delta whose `result.error` is set, or whose `result.data` looks failed, bumps `tool_error_count` + `failed_tools` |
 | `intent-end` | `processed_locally`, `intent_output` (a [conversation response](https://developers.home-assistant.io/docs/intent_conversation_api#conversation-response)) | `status = success`, `processed_locally` → `mode` (`llm`/`local`) + `used_llm`, `continue_conversation`, `answer` (response speech), `response_type`; a successful local intent also counts as one tool call named `intent` |
@@ -104,7 +104,7 @@ Events are read from the debug store, not pushed — the coordinator refreshes o
 2. a **1-second poll** as the universal safety net (covers non-satellite assists).
 
 Updates are de-duplicated by value, so a sensor only fires a state change when its field actually
-changed. A run is invisible until `stt-end` (or `error`) — wake-only / mid-STT runs, including a
+changed. A run is invisible until `stt-end`, `intent-start` (text runs) or `error` — wake-only / mid-STT runs, including a
 silent wake-word abort, are skipped.
 
 ## 5. Stage-by-stage: what the sensors show

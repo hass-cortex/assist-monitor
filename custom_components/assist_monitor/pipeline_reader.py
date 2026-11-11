@@ -30,10 +30,11 @@ ASSIST_PIPELINE_KEY = "assist_pipeline"
 # changed). Warn once instead of silently publishing empty views forever.
 _warned_unrecognized_store = False
 
-# A run becomes publishable as soon as STT produced the question (or it errored). We then keep
+# A run becomes publishable as soon as STT produced the question, or intent-start carried it (text
+# runs have no STT), or it errored. We then keep
 # updating it INCREMENTALLY -- answer, timings and acted entities fill in as later events arrive --
 # instead of waiting for the run to finish. Status is "in_progress" until intent-end.
-READY_MARKERS = {"stt-end", "error"}
+READY_MARKERS = {"stt-end", "intent-start", "error"}
 
 
 def _ev_type(ev: Any) -> str:
@@ -119,6 +120,9 @@ def flatten_run(events: list[Any]) -> dict[str, Any]:
         elif t == "intent-start":
             out["engine"] = d.get("engine")
             out["device_id"] = d.get("device_id")
+            # Text runs (start_stage = intent) have no stt-end: the typed text is the question.
+            if not out.get("question") and d.get("intent_input"):
+                out["question"] = d["intent_input"]
         elif t == "intent-progress":
             # Streaming-input TTS starts playback mid-intent: satellites (wyoming, esphome)
             # begin speaking on this marker, before tts-start. It is the true "assistant
