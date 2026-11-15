@@ -31,9 +31,9 @@ ASSIST_PIPELINE_KEY = "assist_pipeline"
 _warned_unrecognized_store = False
 
 # A run becomes publishable as soon as STT produced the question, or intent-start carried it (text
-# runs have no STT), or it errored. We then keep
-# updating it INCREMENTALLY -- answer, timings and acted entities fill in as later events arrive --
-# instead of waiting for the run to finish. Status is "in_progress" until intent-end.
+# runs have no STT), or it errored. We then keep updating it INCREMENTALLY -- answer, timings and
+# acted entities fill in as later events arrive -- instead of waiting for the run to finish.
+# Status is "in_progress" until intent-end.
 READY_MARKERS = {"stt-end", "intent-start", "error"}
 
 

@@ -138,7 +138,7 @@ Notes on the last two columns:
 | Case | Behaviour |
 | --- | --- |
 | Push-to-talk / on-device wake word | `start_stage = stt`: no `wake_word-*` events → `wake_word` / `wake_word_seconds` are `None` (the phrase an on-device engine detected is never emitted by the pipeline) |
-| Text Assist / HA app | `start_stage = intent`: no `satellite_id` → `round_key` = `x:<n>`; no STT/TTS events → timing sensors mostly `None`; the satellite-state listener never fires, so updates ride the 1 s poll |
+| Text Assist / HA app | `start_stage = intent`: `question` comes from `intent_input`, published at `intent-start`; no `satellite_id` → `round_key` = `x:<n>`; no STT/TTS events → timing sensors mostly `None`; the satellite-state listener never fires, so updates ride the 1 s poll |
 | STT provider with built-in VAD | no `stt-vad-*` events → `speech_seconds` `None`, `stt_seconds` falls back to `stt-start`, `latency_seconds` falls back to `stt-end` |
 | Silent wake-word abort (detection ends with no result, no timeout configured) | `run-start` → `wake_word-start` → `run-end` only; never publishable, sensors keep the previous round |
 | Local intent (no LLM) | no `chat_log_delta` progress → TTFT falls back to `intent-end`; the matched intent counts as one tool call named `intent` |
