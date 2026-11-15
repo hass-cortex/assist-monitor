@@ -595,3 +595,70 @@ def test_round_key_error_before_question_is_terminal() -> None:
     assert pr.round_key(dict(r, satellite_id=None), 99) == "x:99"
     # No question and no error is still "nothing to show yet".
     assert pr.round_key({"satellite_id": "assist_satellite.x"}, 99) is None
+
+
+def _text_events(*, with_answer: bool = True) -> list[types.SimpleNamespace]:
+    events = [
+        _ev(
+            "run-start",
+            {"conversation_id": "C2", "language": "en"},
+            "2026-06-29T12:00:00+00:00",
+        ),
+        _ev(
+            "intent-start",
+            {
+                "engine": "conversation.x",
+                "intent_input": "turn on the light",
+                "device_id": None,
+                "satellite_id": None,
+            },
+            "2026-06-29T12:00:00.1+00:00",
+        ),
+    ]
+    if with_answer:
+        events += [
+            _ev(
+                "intent-end",
+                {
+                    "processed_locally": False,
+                    "intent_output": {
+                        "response": {"speech": {"plain": {"speech": "Done."}}}
+                    },
+                },
+                "2026-06-29T12:00:01+00:00",
+            ),
+            _ev("run-end", None, "2026-06-29T12:00:01.2+00:00"),
+        ]
+    return events
+
+
+def test_text_run_question_comes_from_intent_input() -> None:
+    r = pr.flatten_run(_text_events())
+    assert r["question"] == "turn on the light"
+    assert r["answer"] == "Done."
+    assert r["status"] == "success"
+    assert r["stt_seconds"] is None
+    assert pr.round_key(r, 7) == "x:7"  # non-satellite: a voice display still skips it
+
+
+def test_voice_question_is_not_overridden_by_intent_input() -> None:
+    events = _sample_events()
+    for ev in events:
+        if ev.type == "intent-start":
+            ev.data = dict(ev.data or {}, intent_input="something else")
+    assert pr.flatten_run(events)["question"] == "還看前面呢"
+
+
+def test_parse_all_publishes_text_run() -> None:
+    hass = types.SimpleNamespace(
+        data={
+            pr.ASSIST_PIPELINE_KEY: types.SimpleNamespace(
+                pipeline_debug={
+                    "p1": {"r1": _fake_run(_text_events(), "2026-06-29T12:00:00+00:00")}
+                }
+            )
+        }
+    )
+    out = pr.parse_all(hass)
+    assert out["latest"]["question"] == "turn on the light"
+    assert out["by_pipeline"]["p1"]["run_id"] == "r1"
